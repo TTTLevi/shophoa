@@ -1,18 +1,9 @@
 import { create } from "zustand"
-
+import { listData } from "../utils/mockData"
 
 const useStore = create((set) => ({
-  hoaTangProducts: [],
-  hoaChauProducts: [],
-  hoaChiaBuonProducts:[], 
-  cayXanhProducts:[],
-  hoaChucMungProducts:[],
-  setHoaTangProducts: (products) => set({ hoaTangProducts: products }),
-  setHoaChauProducts: (products) => set({ hoaChauProducts: products }),
-  setHoaChiaBuonProducts: (products) => set({ hoaChiaBuonProducts: products }),
-  setCayXanhProducts: (products) => set({ cayXanhProducts: products }),
-  setHoaChucMungProducts: (products) => set({ hoaChucMungProducts: products }),
-
+  listProducts: listData,
+  setListProducts: (products) => set({ listProduct: products }),
 }))
 
 export default useStore

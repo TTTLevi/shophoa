@@ -1,54 +1,65 @@
-
-import { Link } from 'react-router-dom'
-import { FaSearch, FaShoppingCart, FaUser, FaPhone } from 'react-icons/fa'
-import { useState } from 'react'
+import { Link } from "react-router-dom"
+import { FaSearch, FaShoppingCart, FaUser, FaPhone } from "react-icons/fa"
+import { useEffect, useState } from "react"
+import useCartStore from "../zustand/useCartStore"
 
 const NavBar = () => {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
+  const cart = useCartStore((state) => state.cart)
+
+  useEffect(() => {}, [cart])
 
   return (
-    <nav className='bg-white shadow-md'>
-      <div className='container mx-auto px-4 md:px-16 lg:px-20 py-4 flex justify-between items-center gap-5'>
+    <nav className="bg-white shadow-md">
+      <div className="container mx-auto px-4 md:px-16 lg:px-20 py-4 flex justify-between items-center gap-5">
         <div className="text-2xl font-bold">
-          <Link to="/"><span className='text-orange-500 font-bold text-2xl'>Flower</span> Shop</Link>
+          <Link to="/">
+            <span className="text-orange-500 font-bold text-2xl">Flower</span> Shop
+          </Link>
         </div>
-        <div className='flex-1 relative mx-4 w-full flex justify-center'>
-          <form className='relative hidden sm:block w-full lg:w-[70%]'>
-            <input type="text" placeholder='Tìm kiếm sản phẩm'
-              className='w-full py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:border-orange-500'
+        <div className="flex-1 relative mx-4 w-full flex justify-center">
+          <form className="relative hidden sm:block w-full lg:w-[70%]">
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm"
+              className="w-full py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:border-orange-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <FaSearch className='absolute top-1/2 right-4 transform -translate-y-1/2 text-orange-400' />
+            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-orange-400" />
           </form>
         </div>
         <div>
-          <div className='hidden md:flex items-center'>
-            <div className='flex items-center text-orange-500 hover:text-orange-600 cursor-pointer'>
-              <FaPhone className='mr-2 text-3xl' />
+          <div className="hidden md:flex items-center">
+            <div className="flex items-center text-orange-500 hover:text-orange-600 cursor-pointer">
+              <FaPhone className="mr-2 text-3xl" />
             </div>
-            <div className='flex flex-col items-end'>
+            <div className="flex flex-col items-end">
               <a href="tel:+84123456789">0788773399</a>
-              <span className='text-sm text-gray-600'>từ 8:00 - 21:00</span>
+              <span className="text-sm text-gray-600">từ 8:00 - 21:00</span>
             </div>
           </div>
         </div>
-        <div className='flex items-center space-x-4'>
-          <Link to="/cart" className='relative'>
-            <FaShoppingCart className='text-2xl' />
-            <div className='absolute right-[-5px] top-[-5px] w-4 text-center leading-4 bg-orange-500 text-white aspect-square rounded-full text-[9px]'>
-              1
+        <div className="flex items-center space-x-4">
+          <Link to="/cart" className="relative">
+            <FaShoppingCart className="text-2xl" />
+            <div className="absolute right-[-5px] top-[-5px] w-4 text-center leading-4 bg-orange-500 text-white aspect-square rounded-full text-[9px]">
+              {cart.length}
             </div>
           </Link>
-          <div className='group relative'>
-            <button className='cursor-pointer'>
-              <FaUser className='text-2xl' />
+          <div className="group relative">
+            <button className="cursor-pointer">
+              <FaUser className="text-2xl" />
             </button>
-            <div className='group-hover:block hidden absolute right-0 dropdown-menu pt-4 z-50'>
-              <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg'>
-                <Link to="/login" className="hover:text-orange-500 cursor-pointer">Đăng nhập</Link>
-                <Link to="/register" className="hover:text-orange-500 cursor-pointer">Đăng ký</Link> 
-                <p className='hover:text-orange-500 cursor-pointer'>Logout</p>
+            <div className="group-hover:block hidden absolute right-0 dropdown-menu pt-4 z-50">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg">
+                <Link to="/login" className="hover:text-orange-500 cursor-pointer">
+                  Đăng nhập
+                </Link>
+                <Link to="/register" className="hover:text-orange-500 cursor-pointer">
+                  Đăng ký
+                </Link>
+                <p className="hover:text-orange-500 cursor-pointer">Logout</p>
               </div>
             </div>
             {/* <button className='hidden md:block'>
