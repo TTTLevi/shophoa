@@ -2,20 +2,33 @@ import { useParams } from "react-router-dom"
 import { listData } from "../utils/mockData"
 import { useState, useEffect } from "react"
 import RelatedProducts from "../components/RelatedProducts"
+import useCartStore from "../zustand/useCartStore"
+import { toast } from "react-toastify"
 
 const ProductDetail = () => {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
-
-  useEffect(() => {
-    getProduct()
-  }, [id])
+  const addToCart = useCartStore((state) => state.addToCart)
 
   const getProduct = () => {
     const foundProduct = listData.find((product) => product.id === parseInt(id))
     if (foundProduct) {
       setProduct(foundProduct)
+    }
+  }
+
+  useEffect(() => {
+    getProduct()
+  }, [id])
+
+  const handleAddCart = () => {
+    if (product && quantity > 0) {
+      addToCart(product, quantity)
+      toast.success(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`, {
+        position: "top-right",
+        autoClose: 2000,
+      })
     }
   }
 
@@ -81,7 +94,10 @@ const ProductDetail = () => {
               </div>
             </div>
             <hr className="sm:w-4/5 w-full" />
-            <button className="bg-green-500 text-white px-4 py-3 rounded text-sm active:bg-green-600 w-[50%]">
+            <button 
+              onClick={handleAddCart}
+              className="bg-green-500 text-white px-4 py-3 rounded text-sm active:bg-green-600 w-[50%]"
+            >
               Thêm vào giỏ hàng
             </button>
             <hr className="sm:w-4/5 w-full" />

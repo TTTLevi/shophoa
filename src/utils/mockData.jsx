@@ -33,7 +33,7 @@ export const HoaTangProducts = [
     name: "Bó Hoa Yêu Thương Nồng Ấm 1",
     category: "hoa-tang-hoa-dich-vu",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -41,7 +41,7 @@ export const HoaTangProducts = [
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     category: "hoa-tang-hoa-dich-vu",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -49,7 +49,7 @@ export const HoaTangProducts = [
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     category: "hoa-tang-hoa-dich-vu",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -57,7 +57,7 @@ export const HoaTangProducts = [
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     category: "hoa-tang-hoa-dich-vu",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -65,7 +65,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -73,7 +73,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -81,7 +81,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -89,7 +89,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -97,7 +97,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
   {
@@ -105,7 +105,7 @@ export const HoaTangProducts = [
     category: "hoa-tang-hoa-dich-vu",
     name: "Bó Hoa Yêu Thương Nồng Ấm",
     image: Hoatang,
-    price: 18000000,
+    price: 1800000,
     description: "Hoa tặng đẹp",
   },
 ]

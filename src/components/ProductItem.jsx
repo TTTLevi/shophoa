@@ -2,19 +2,27 @@ import PropTypes from "prop-types"
 import { useNavigate } from "react-router-dom"
 import useCartStore from "../zustand/useCartStore"
 import { listData } from "../utils/mockData"
+import { toast } from "react-toastify"
+
 const ProductItem = ({ product }) => {
   const navigate = useNavigate()
 
   // const cart = useCartStore((state) => state.cart)
-  const setCart = useCartStore((state) => state.setCart)
+  const addToCart = useCartStore((state) => state.addToCart)
 
   const handleClickProduct = (id) => {
     navigate(`/product-detail/${id}`)
   }
 
   const handleAddCart = (id) => {
-    const product = listData.filter((el) => el.id === id)
-    setCart(product)
+    const foundProduct = listData.find((el) => el.id === id)
+    if (foundProduct) {
+      addToCart(foundProduct, 1)
+      toast.success(`Đã thêm ${foundProduct.name} vào giỏ hàng!`, {
+        position: "top-right",
+        autoClose: 2000,
+      })
+    }
   }
 
   return (

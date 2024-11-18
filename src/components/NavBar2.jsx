@@ -1,8 +1,10 @@
 import { Categories } from "../utils/mockData"
-import { Link, useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
+
 const NavBar2 = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
@@ -13,6 +15,9 @@ const NavBar2 = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleCategoryClick = (slug) => {
+    navigate(`/${slug}`);
+  };
 
   return (
     <div className={`${isSticky ? 'fixed top-0 left-0 right-0' : ''} z-50 bg-white shadow-md transition-transform duration-300`} id="navbar2">
@@ -26,19 +31,20 @@ const NavBar2 = () => {
               <span className="font-medium">Danh mục sản phẩm</span>
             </button>
 
-            <div className="absolute left-20  mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ">
-              <div className="py-1 ">
+            <div className="absolute left-20 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+              <div className="py-1">
                 {Categories.map((category) => (
-                  <Link
+                  <div
                     key={category.id}
-                    to={`/${category.slug}`}
-                    className={`block px-4 py-2 text-sm ${location.pathname === `/${category.slug}`
-                      ? "text-[#00833d] bg-gray-100"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-[#00833d]"
-                      }`}
+                    onClick={() => handleCategoryClick(category.slug)}
+                    className={`block px-4 py-2 text-sm cursor-pointer ${
+                      location.pathname === `/${category.slug}`
+                        ? "text-[#00833d] bg-gray-100"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-[#00833d]"
+                    }`}
                   >
                     {category.name}
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -46,7 +52,6 @@ const NavBar2 = () => {
         </div>
       </nav>
     </div>
-
   )
 }
 

@@ -8,7 +8,7 @@ const Footer = () => {
           <div>
             <div className="text-2xl font-bold">
               <Link to="/">
-                <span className="text-orange-500 font-bold text-2xl">Flower</span> Shop1
+                <span className="text-orange-500 font-bold text-2xl">Flower</span> Shop
               </Link>
             </div>
             <p className="text-gray-600 mt-4">
