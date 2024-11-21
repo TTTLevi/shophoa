@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
-import { PublicLayout } from "./components/layouts"
+import { PublicLayout, AdminLayout } from "./components/layouts"
 import ProductDetail from "./pages/ProductDetail"
 import Cart from "./pages/Cart"
 import CategoryPage from "./pages/CategoryPage"
@@ -15,6 +15,9 @@ import Order from "./pages/Order"
 import FilterData from "./pages/FilterData"
 import About from "./pages/About"
 import Address from "./pages/Address"
+import OverviewPage from "./pages/admin/OverviewPage"
+import ProductsPage from "./pages/admin/ProductsPage"
+
 function App() {
   const [order, setOrder] = useState(null)
 
@@ -35,6 +38,11 @@ function App() {
           <Route path="/search-result" element={<FilterData />}></Route>
           <Route path="/gioi-thieu" element={<About />}></Route>
           <Route path="/shop-flower" element={<Address />}></Route>
+        </Route>
+        {/* admin */}
+        <Route path="/admin" element={<AdminLayout/>}>
+          <Route path="/admin" element={<OverviewPage/>} />
+          <Route path="/admin/san-pham" element={<ProductsPage/>}/>
         </Route>
       </Routes>
     </Router>
