@@ -13,7 +13,6 @@ const SIDEBAR_ITEMS = [
 	{ name: "Cài đặt", icon: Settings, color: "#6ee7b7", href: "/admin/settings" },
 ]
 
-
 const Sidebar = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -21,7 +20,7 @@ const Sidebar = () => {
 		<motion.div
 			className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-20"
 				}`}
-			animate={{ width: isSidebarOpen ? 256 : 85 }}
+			animate={{ width: isSidebarOpen ? 256 : 80 }}
 		>
 			<div className='h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-4 flex flex-col border-r border-gray-700'>
 				<motion.button
@@ -34,11 +33,13 @@ const Sidebar = () => {
 				</motion.button>
 	
 				<nav className='mt-7 flex-grow'>
-					<Link to="/admin">
-						<div className="pl-3 pb-4 pr-3">
-							<span className="text-orange-500 font-bold">Flower</span> Shop
-						</div>
-					</Link>
+					{isSidebarOpen && (
+						<Link to="/admin">
+							<div className="pl-3 pb-4 pr-3 text-2xl">
+								<span className="text-orange-500 font-bold">Flower</span> Shop
+							</div>
+						</Link>
+					)}
 
 					{SIDEBAR_ITEMS.map((item) => (
 						<Link key={item.href} to={item.href}>
@@ -51,7 +52,7 @@ const Sidebar = () => {
 											initial={{ opacity: 0, width: 0 }}
 											animate={{ opacity: 1, width: "auto" }}
 											exit={{ opacity: 0, width: 0 }}
-											transition={{ duration: 0.2, delay: 0.3 }}
+											transition={{ duration: 0.2, delay: 0.1 }}
 										>
 											{item.name}
 										</motion.span>
@@ -65,4 +66,5 @@ const Sidebar = () => {
 		</motion.div>
 	);
 };
+
 export default Sidebar;

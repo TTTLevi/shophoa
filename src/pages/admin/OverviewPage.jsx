@@ -1,7 +1,11 @@
 import { ClipboardList, ShoppingBag, Users, Zap } from "lucide-react"
+import {motion} from 'framer-motion'
+
 import Header from "../../components/admin/common/Header"
 import StatCard from "../../components/admin/common/StatCard"
-import {motion} from 'framer-motion'
+import SalesOverviewChart from '../../components/admin/overview/SalesOverviewChart'
+import CategoryDistributionChart from '../../components/admin/overview/CategoryDistributionChart'
+import LatestOrders from '../../components/admin/overview/LatestOrders'
 
 const OverviewPage = () => {
   return (
@@ -11,7 +15,7 @@ const OverviewPage = () => {
         <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
           {/* Stats */}
           <motion.div
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-col-4 mb-7"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-4 md:grid-col-4 mb-7"
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 1}}
@@ -29,6 +33,13 @@ const OverviewPage = () => {
               name="Tổng sản phẩm" icon={ShoppingBag} value='21' color='#10b981'
             />
           </motion.div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
+            <SalesOverviewChart/>
+            <CategoryDistributionChart/>
+            <LatestOrders/>
+          </div>
         </main>
     </div>
   )

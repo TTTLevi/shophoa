@@ -17,6 +17,9 @@ import About from "./pages/About"
 import Address from "./pages/Address"
 import OverviewPage from "./pages/admin/OverviewPage"
 import ProductsPage from "./pages/admin/ProductsPage"
+import Category from "./pages/admin/Category"
+import UsersPage from "./pages/admin/UsersPage"
+import EditUserPage from "./pages/admin/EditUserPage"
 
 function App() {
   const [order, setOrder] = useState(null)
@@ -43,6 +46,9 @@ function App() {
         <Route path="/admin" element={<AdminLayout/>}>
           <Route path="/admin" element={<OverviewPage/>} />
           <Route path="/admin/san-pham" element={<ProductsPage/>}/>
+          <Route path="/admin/danh-muc" element={<Category/>}/>
+          <Route path="/admin/users" element={<UsersPage/>}/>
+          <Route path="/admin/users/:id" element={<EditUserPage/>}/>
         </Route>
       </Routes>
     </Router>
