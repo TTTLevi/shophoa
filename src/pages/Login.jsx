@@ -1,16 +1,71 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { apiLogin } from '../apis/apiAuth';
+import { useNavigate } from "react-router-dom"
+import { toast } from 'react-toastify';
+
+import useUserStore from '../zustand/useUserStore';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { setAccessToken, setMe } = useUserStore();
+  const navigate = useNavigate()
 
-  const handleLogin = (e) => {
+  const onToast = (s) => {
+    if (s === "success") {
+      toast.success("Đăng nhập thành công", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error(s, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     let user = {
-      username: username,
+      name: username,
       password: password
     }
+
+    const response = await apiLogin(user);
+
+    if (response.status === 200) {
+      if (response.data.status === true) {
+        setAccessToken(response.data.token);
+        setMe({ username: response.data.username, role: response.data.roleId, status: response.data.status });
+        if (response.data.roleId === 1) {
+          onToast("success");
+          navigate("/admin");
+        } else {
+          onToast("Đăng nhập thành công");
+          navigate("/");
+        }
+      } else {
+        onToast("Tài khoản đã bị khóa");
+      }
+    } else {
+      onToast("Tài khoản và mật khẩu không đúng");
+    }
+
+    console.log(response);
     console.log(user);
   }
 

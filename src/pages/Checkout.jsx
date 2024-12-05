@@ -281,6 +281,15 @@ const Checkout = ({setOrder}) => {
                       </div>
                     </label>
                   </div>
+                  <div className="flex items-center gap-3">
+                    <input type="radio" id="momo" name="payment" value="momo" disabled />
+                    <label htmlFor="cod" className="flex items-center gap-2 cursor-pointer">
+                      <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square-1024x1024.png" className="w-6 h-6" alt="" />
+                      <div>
+                        <h4 className="text-sm font-medium">Thanh toán momo</h4>
+                      </div>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

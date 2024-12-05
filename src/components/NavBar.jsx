@@ -3,19 +3,27 @@ import { FaSearch, FaShoppingCart, FaUser, FaPhone } from "react-icons/fa"
 import { useEffect, useState } from "react"
 import useCartStore from "../zustand/useCartStore"
 import useStore from "../zustand/useStore"
+import useUserStore from "../zustand/useUserStore"
 
 const NavBar = () => {
   const [search, setSearch] = useState("")
   const cart = useCartStore((state) => state.cart)
   const setSearchTerm = useStore((state) => state.setSearchTerm)
   const navigate = useNavigate()
+  const { me, logout } = useUserStore();
 
-  useEffect(() => {}, [cart])
+
+  useEffect(() => { }, [cart])
 
   const handleSearch = (e) => {
     e.preventDefault()
     setSearchTerm(search)
     navigate('/search-result')
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login')
   }
 
   // Tính tổng số lượng sản phẩm
@@ -30,7 +38,7 @@ const NavBar = () => {
           </Link>
         </div>
         <div className="flex-1 relative mx-4 w-full flex justify-center">
-          <form 
+          <form
             onSubmit={handleSearch}
             className="relative hidden sm:block w-full lg:w-[70%]"
           >
@@ -64,17 +72,25 @@ const NavBar = () => {
           </Link>
           <div className="group relative">
             <button className="cursor-pointer">
-              <FaUser className="text-2xl" />
+              {
+                me ? <p>Xin chào <span className="font-bold">{me.username.toUpperCase()}</span></p> : <FaUser className="text-2xl" />
+              }
             </button>
             <div className="group-hover:block hidden absolute right-0 dropdown-menu pt-4 z-50">
               <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg">
-                <Link to="/login" className="hover:text-orange-500 cursor-pointer">
-                  Đăng nhập
-                </Link>
-                <Link to="/register" className="hover:text-orange-500 cursor-pointer">
-                  Đăng ký
-                </Link>
-                <p className="hover:text-orange-500 cursor-pointer">Đăng xuất</p>
+                {
+                  !me && <>
+                    <Link to="/login" className="hover:text-orange-500 cursor-pointer">
+                      Đăng nhập
+                    </Link>
+                    <Link to="/register" className="hover:text-orange-500 cursor-pointer">
+                      Đăng ký
+                    </Link>
+                  </>
+                }
+                {
+                  me && <p className="hover:text-orange-500 cursor-pointer" onClick={handleLogout}>Đăng xuất</p>
+                }
               </div>
             </div>
           </div>

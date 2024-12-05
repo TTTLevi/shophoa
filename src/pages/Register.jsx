@@ -1,27 +1,39 @@
 import { useState } from "react"
+import { apiRegister } from "../apis/apiAuth";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const [fullname, setFullname] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       let user = {
-        username,
+        // fullname,
+        name: username,
         email,
         password,
-        confirmPassword
       };
-      console.log(user);
+      const response = await apiRegister(user);
+      console.log(response);
+
+      navigate('/login');
     }
   }
 
   const validateForm = () => {
     let tempErrors = {};
+
+    if (!fullname) {
+      tempErrors.fullname = 'Họ và tên không được để trống';
+    }
 
     if (!username) {
       tempErrors.username = 'Tên đăng nhập không được để trống';
@@ -29,10 +41,14 @@ const Register = () => {
 
     if (!email) {
       tempErrors.email = 'Email không được để trống';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      tempErrors.email = 'Email không hợp lệ';
     }
 
     if (!password) {
       tempErrors.password = 'Mật khẩu không được để trống';
+    } else if (password.length < 7) {
+      tempErrors.password = 'Mật khẩu phải có ít nhất 7 kí tự';
     }
 
     if (!confirmPassword) {
@@ -62,6 +78,22 @@ const Register = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
+              <label htmlFor="fullname" className="block text-sm font-medium text-gray-700 mb-1">
+                Họ tên
+              </label>
+              <input
+                id="fullname"
+                name="fullname"
+                type="text"
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
+                className={`w-full px-4 py-2 border ${errors.fullname ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 placeholder-gray-400`}
+                placeholder="Nhập họ tên của bạn"
+              />
+              {errors.fullname && <p className="text-red-500 text-xs mt-1">{errors.fullname}</p>}
+            </div>
+
+            <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                 Tên đăng nhập
               </label>
@@ -72,7 +104,7 @@ const Register = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className={`w-full px-4 py-2 border ${errors.username ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 placeholder-gray-400`}
-                placeholder="Nhập tên đăng nhập của bạn"
+                placeholder="Nhập username"
               />
               {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
             </div>

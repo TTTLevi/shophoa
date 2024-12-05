@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Edit, Trash } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Pagination from '../common/Pagination';
 
 const ProductTable = () => {
   const navigate = useNavigate();
@@ -54,12 +55,6 @@ const ProductTable = () => {
     );
   });
 
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -72,9 +67,31 @@ const ProductTable = () => {
       <div className="w-full md:w-2/3 shadow-lg rounded-lg overflow-hidden bg-gray-800 bg-opacity-50 backdrop-blur-md p-3">
         <div className="flex justify-between items-center mb-5">
           <h2 className='text-2xl font-bold text-orange-500 mb-4'>Danh sách sản phẩm</h2>
+          <div className='flex justify-between items-center'>
+            <div className='bg-white rounded-full w-9 h-9 flex justify-center items-center hover:bg-orange-100'>
+              <button 
+                onClick={() => navigate('/admin/add-product')}
+                className='text-3xl text-green-500'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-6 w-6'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M12 6v6m0 0v6m0-6h6m-6 0H6'
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <table className="w-full text-sm text-left text-gray-500 ">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3">Hình</th>
               <th scope="col" className="px-6 py-3">Tên</th>
@@ -84,7 +101,7 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody>
-            {currentProducts.map(product => (
+            {filteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage).map(product => (
               <tr key={product.id} className="bg-white border-b hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <img src={product.image} alt={product.name} className="w-10 h-10 rounded-full" />
@@ -93,27 +110,18 @@ const ProductTable = () => {
                 <td className="px-6 py-4">{product.category}</td>
                 <td className="px-6 py-4">{product.price}</td>
                 <td className="px-6 py-4">
-                  <Edit size={21} className="inline-block mr-2 text-blue-500 hover:cursor-pointer" onClick={() => navigate(`/admin/products/edit/${product.id}`)} />
+                  <Edit size={21} className="inline-block mr-2 text-blue-500 hover:cursor-pointer" onClick={() => navigate(`/admin/edit-product/${product.id}`)} />
                   <Trash size={21} className="inline-block text-red-500 hover:cursor-pointer" />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <nav className="mt-4">
-          <ul className="flex justify-center">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index + 1} className="mx-1">
-                <button
-                  onClick={() => paginate(index + 1)}
-                  className={`px-3 py-2 rounded-md ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <Pagination 
+          itemsPerPage={productsPerPage} 
+          totalItems={filteredProducts.length} 
+          paginate={paginate} 
+        />
       </div>
       <div className="w-full md:w-1/3 shadow-lg rounded-lg overflow-hidden bg-gray-800 bg-opacity-50 backdrop-blur-md p-3 flex flex-col">
         <div className='bg-white rounded-lg p-4 flex flex-col gap-6 w-full'>
@@ -169,6 +177,6 @@ const ProductTable = () => {
       </div>
     </motion.div>
   );
-}
+};
 
 export default ProductTable;

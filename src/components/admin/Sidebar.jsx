@@ -1,4 +1,4 @@
-import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, ClipboardList, Users } from "lucide-react";
+import { BarChart2, Menu, Settings, ShoppingBag, ShoppingCart, ClipboardList, Users } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -7,10 +7,9 @@ const SIDEBAR_ITEMS = [
 	{ name: "Tổng quan", icon: BarChart2, color: "#6366f1", href: "/admin" },
 	{ name: "Danh mục sản phẩm", icon: ClipboardList, color: "#ed1c24", href: "/admin/danh-muc" },
 	{ name: "Sản phẩm", icon: ShoppingBag, color: "#8b5cf6", href: "/admin/san-pham" },
-	{ name: "Sales", icon: DollarSign, color: "#10b981", href: "/admin/sales" },
-	{ name: "Users", icon: Users, color: "#ec4899", href: "/admin/users" },
-	{ name: "Orders", icon: ShoppingCart, color: "#f59e0b", href: "/admin/orders" },
-	{ name: "Cài đặt", icon: Settings, color: "#6ee7b7", href: "/admin/settings" },
+	{ name: "Tài khoản", icon: Users, color: "#ec4899", href: "/admin/users" },
+	{ name: "Đơn hàng", icon: ShoppingCart, color: "#f59e0b", href: "/admin/orders" },
+	// { name: "Cài đặt", icon: Settings, color: "#6ee7b7", href: "/admin/settings" },
 ]
 
 const Sidebar = () => {

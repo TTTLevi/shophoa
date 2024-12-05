@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useState } from "react"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
+import useUserStore  from "./zustand/useUserStore"
 
 import Home from "./pages/Home"
 import Login from "./pages/Login"
@@ -20,9 +21,17 @@ import ProductsPage from "./pages/admin/ProductsPage"
 import Category from "./pages/admin/Category"
 import UsersPage from "./pages/admin/UsersPage"
 import EditUserPage from "./pages/admin/EditUserPage"
+import AddEditProductPage from "./pages/admin/AddEditProductPage"
+import OrdersPage from "./pages/admin/OrdersPage"
+import { ProtectedAdmin } from "./components/private_route/ProtectedAdmin"
 
 function App() {
   const [order, setOrder] = useState(null)
+  const { me } = useUserStore()
+  const [isSignedIn, setIsSignedIn] = useState(
+    me || false
+  )
+  const role = me?.role || null
 
   return (
     <Router>
@@ -43,13 +52,18 @@ function App() {
           <Route path="/shop-flower" element={<Address />}></Route>
         </Route>
         {/* admin */}
-        <Route path="/admin" element={<AdminLayout/>}>
-          <Route path="/admin" element={<OverviewPage/>} />
-          <Route path="/admin/san-pham" element={<ProductsPage/>}/>
-          <Route path="/admin/danh-muc" element={<Category/>}/>
-          <Route path="/admin/users" element={<UsersPage/>}/>
-          <Route path="/admin/users/:id" element={<EditUserPage/>}/>
-        </Route>
+        {/* <ProtectedAdmin isSignedIn={isSignedIn} role={role}> */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={<OverviewPage />} />
+            <Route path="/admin/san-pham" element={<ProductsPage />} />
+            <Route path="/admin/danh-muc" element={<Category />} />
+            <Route path="/admin/users" element={<UsersPage />} />
+            <Route path="/admin/users/:id" element={<EditUserPage />} />
+            <Route path="/admin/add-product" element={<AddEditProductPage />} />
+            <Route path="/admin/edit-product/:id" element={<AddEditProductPage />} />
+            <Route path="/admin/orders" element={<OrdersPage />} />
+          </Route>
+        {/* </ProtectedAdmin> */}
       </Routes>
     </Router>
   )
