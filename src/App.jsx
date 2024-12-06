@@ -24,6 +24,10 @@ import EditUserPage from "./pages/admin/EditUserPage"
 import AddEditProductPage from "./pages/admin/AddEditProductPage"
 import OrdersPage from "./pages/admin/OrdersPage"
 import { ProtectedAdmin } from "./components/private_route/ProtectedAdmin"
+import OrderDetail from "./pages/admin/OrderDetail"
+import MyOrders from "./pages/MyOrders"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
 
 function App() {
   const [order, setOrder] = useState(null)
@@ -50,6 +54,9 @@ function App() {
           <Route path="/search-result" element={<FilterData />}></Route>
           <Route path="/gioi-thieu" element={<About />}></Route>
           <Route path="/shop-flower" element={<Address />}></Route>
+          <Route path="/my-order" element={<MyOrders />}></Route>
+          <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+          <Route path="/reset-password" element={<ResetPassword />}></Route>
         </Route>
         {/* admin */}
         {/* <ProtectedAdmin isSignedIn={isSignedIn} role={role}> */}
@@ -62,6 +69,7 @@ function App() {
             <Route path="/admin/add-product" element={<AddEditProductPage />} />
             <Route path="/admin/edit-product/:id" element={<AddEditProductPage />} />
             <Route path="/admin/orders" element={<OrdersPage />} />
+            <Route path="/admin/orders/:id" element={<OrderDetail />} />
           </Route>
         {/* </ProtectedAdmin> */}
       </Routes>

@@ -1,7 +1,8 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { FaFilter } from "react-icons/fa"
-import { Edit, Trash } from "lucide-react"
+import { Eye, Trash } from "lucide-react"
+import { Link } from "react-router-dom"
 
 import Header from "../../components/admin/common/Header"
 import Pagination from "../../components/admin/common/Pagination"
@@ -72,14 +73,14 @@ const OrdersPage = () => {
     <div className="flex-1 overflow-auto relative z-10">
       <Header title='Đơn hàng' />
       <motion.div
-        className='bg-white shadow-lg rounded-xl p-5 border border-gray-200 mt-11 mx-11'
+        className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-5 border border-gray-700 mt-11 ml-11 mr-11'
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
         <div>
-          <h2 className='text-2xl font-bold text-gray-800 mb-4'>Danh sách đơn hàng</h2>
-          <div className="flex justify-between mb-4 bg-gray-100 p-3 rounded-lg flex-col sm:flex-row">
+          <h2 className='text-xl font-semibold text-orange-500 mb-4'>Danh sách đơn hàng</h2>
+          <div className="flex justify-between mb-4 bg-gray-200 p-3 rounded-lg flex-col sm:flex-row">
             <div className="flex items-center">
               <label className="mr-2 text-gray-700">Lọc theo giá:</label>
               <select
@@ -115,7 +116,7 @@ const OrdersPage = () => {
                 />
               </div>
 
-              <button 
+              <button
                 onClick={handleFilter}
                 className="relative min-w-[90px] bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center">
                 Lọc
@@ -124,7 +125,7 @@ const OrdersPage = () => {
 
             </div>
           </div>
-          <table className="w-full text-sm text-gray-700 border-collapse">
+          <table className="w-full text-sm text-gray-700 border-collapse bg-white rounded-lg">
             <thead>
               <tr>
                 <th className="px-4 py-2 border-b text-left">ID</th>
@@ -153,6 +154,7 @@ const OrdersPage = () => {
                       <option value="processing">Đang xử lý</option>
                       <option value="shipping">Đang giao hàng</option>
                       <option value="delivered">Đã giao</option>
+                      <option value="cancelled">Đã hủy</option>
                     </select>
                   </td>
                   <td className="px-4 py-2 border-b">{order.address}</td>
@@ -163,15 +165,17 @@ const OrdersPage = () => {
                       onClick={() => {
                         // Chỉnh sửa đơn hàng
                       }}
-                      className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-2 rounded-lg mr-2"
+                      className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-1 px-1 rounded-lg mr-2"
                     >
-                      <Edit size={21} className="inline-block text-green-300 hover:cursor-pointer" />
+                      <Link to={`/admin/orders/${order.id}`} className="inline-block text-green-300 hover:cursor-pointer">
+                        <Eye size={21} className="inline-block text-green-300 hover:cursor-pointer" />
+                      </Link>
                     </button>
                     <button
                       onClick={() => {
                         // Xóa đơn hàng
                       }}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-lg"
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded-lg"
                     >
                       <Trash size={21} className="inline-block text-yellow-200 hover:cursor-pointer" />
                     </button>

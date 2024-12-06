@@ -16,8 +16,8 @@ const Register = () => {
     e.preventDefault();
     if (validateForm()) {
       let user = {
-        // fullname,
-        name: username,
+        fullname,
+        // name: username,
         email,
         password,
       };
@@ -93,7 +93,7 @@ const Register = () => {
               {errors.fullname && <p className="text-red-500 text-xs mt-1">{errors.fullname}</p>}
             </div>
 
-            <div>
+            {/* <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                 Tên đăng nhập
               </label>
@@ -107,7 +107,7 @@ const Register = () => {
                 placeholder="Nhập username"
               />
               {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
-            </div>
+            </div> */}
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">

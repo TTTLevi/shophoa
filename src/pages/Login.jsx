@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import useUserStore from '../zustand/useUserStore';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setAccessToken, setMe } = useUserStore();
   const navigate = useNavigate()
@@ -41,7 +41,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     let user = {
-      name: username,
+      email: email,
       password: password
     }
 
@@ -77,25 +77,25 @@ const Login = () => {
             Đăng nhập
           </h2>
           <p className="text-gray-500 text-sm">
-            Chào mừng bạn quay trở lại
+            Chào mừng bạn
           </p>
         </div>
 
         <form className="mt-8 space-y-6">
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                Tên đăng nhập
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 placeholder-gray-400"
-                placeholder="Nhập tên đăng nhập của bạn"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Nhập email của bạn"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -129,9 +129,9 @@ const Login = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-green-600 hover:text-green-500 transition duration-200">
+              <Link to="/forgot-password" className="font-medium text-green-600 hover:text-green-500 transition duration-200">
                 Quên mật khẩu?
-              </a>
+              </Link>
             </div>
           </div>
 

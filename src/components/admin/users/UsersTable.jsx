@@ -50,19 +50,19 @@ const UsersTable = () => {
           <thead className='bg-gray-200 '>
             <tr>
               <th className='px-5 py-3 text-left text-xs font-medium uppercase tracking-wider'>
-                Name
+                Họ tên
               </th>
               <th className='px-5 py-3 text-left text-xs font-medium uppercase tracking-wider'>
                 Email
               </th>
               <th className='px-5 py-3 text-left text-xs font-medium uppercase tracking-wider'>
-                Role
+                Vai trò
               </th>
               <th className='px-5 py-3 text-left text-xs font-medium uppercase tracking-wider'>
-                Status
+                Trạng thái
               </th>
               <th className='px-5 py-3 text-left text-xs font-medium uppercase tracking-wider'>
-                Actions
+                Hành động
               </th>
             </tr>
           </thead>

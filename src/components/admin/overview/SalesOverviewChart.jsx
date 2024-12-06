@@ -30,7 +30,7 @@ const SalesOverviewChart = () => {
         <ResponsiveContainer width={"100%"} height={"100%"}>
           <LineChart data={salesData}>
             <CartesianGrid strokeDasharray='3 3' stroke='#4B5563' />
-            <XAxis dataKey={"name"} stroke='#9ca3af' />
+            <XAxis dataKey={"name"} stroke='#ffffff' />
             <YAxis stroke='#9ca3af' />
             <Tooltip
 							contentStyle={{
