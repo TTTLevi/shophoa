@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
-import { FaSearch, FaShoppingCart, FaUser, FaPhone } from "react-icons/fa"
+import { FaSearch, FaShoppingCart, FaUser, FaPhone, FaBoxOpen} from "react-icons/fa"
 import { useEffect, useState } from "react"
 import useCartStore from "../zustand/useCartStore"
 import useStore from "../zustand/useStore"
 import useUserStore from "../zustand/useUserStore"
+
+import { IoIosLogOut } from "react-icons/io"
 
 const NavBar = () => {
   const [search, setSearch] = useState("")
@@ -24,6 +26,10 @@ const NavBar = () => {
   const handleLogout = () => {
     logout();
     navigate('/login')
+  }
+
+  const handleOrder = () => {
+    navigate('/my-order')
   }
 
   // Tính tổng số lượng sản phẩm
@@ -89,7 +95,26 @@ const NavBar = () => {
                   </>
                 }
                 {
-                  me && <p className="hover:text-orange-500 cursor-pointer" onClick={handleLogout}>Đăng xuất</p>
+                  me && <div>
+                    <div className="flex justify-center items-center mb-3 hover:text-orange-500 cursor-pointer">
+                      <FaBoxOpen className="text-xl mr-2 text-yellow-500" />
+                      <p
+                        onClick={handleOrder}
+                      >
+                        Đơn hàng
+                      </p>
+                    </div>
+
+                    <div className="flex justify-center items-center hover:text-orange-500 cursor-pointer">
+                      <IoIosLogOut className="text-xl mr-2 text-red-500"/>
+                      <p
+                        onClick={handleLogout}
+                      >
+
+                        Đăng xuất
+                      </p>
+                    </div>
+                  </div>
                 }
               </div>
             </div>

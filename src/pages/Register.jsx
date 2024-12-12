@@ -3,8 +3,8 @@ import { apiRegister } from "../apis/apiAuth";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
+  const [fullname, setFullName] = useState('');
+  // const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,7 +16,7 @@ const Register = () => {
     e.preventDefault();
     if (validateForm()) {
       let user = {
-        fullname,
+        fullName: fullname,
         // name: username,
         email,
         password,
@@ -35,9 +35,9 @@ const Register = () => {
       tempErrors.fullname = 'Họ và tên không được để trống';
     }
 
-    if (!username) {
-      tempErrors.username = 'Tên đăng nhập không được để trống';
-    }
+    // if (!username) {
+    //   tempErrors.username = 'Tên đăng nhập không được để trống';
+    // }
 
     if (!email) {
       tempErrors.email = 'Email không được để trống';
@@ -86,7 +86,7 @@ const Register = () => {
                 name="fullname"
                 type="text"
                 value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
+                onChange={(e) => setFullName(e.target.value)}
                 className={`w-full px-4 py-2 border ${errors.fullname ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 placeholder-gray-400`}
                 placeholder="Nhập họ tên của bạn"
               />

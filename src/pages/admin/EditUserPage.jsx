@@ -1,10 +1,39 @@
-import { useState } from 'react';
-
-import Header from "../../components/admin/common/Header";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import Header from '../../components/admin/common/Header';
+import { apiGetUser } from '../../apis/apiUse';
 
 const EditUserPage = () => {
+  const { id } = useParams();
+  const [user, setUser] = useState({
+    fullName: '',
+    email: '',
+    role: '',
+    status: true,
+  });
+
+  
+
+  const handleGetUser = async () => {
+
+    const response = await apiGetUser(id);
+
+    console.log(response.data);
+    setUser({
+      fullName: response.data.fullName,
+      email: response.data.email,
+      role: response.data.role_id,
+      status: response.data.status,
+    });
+  }
+
+  useEffect(() => {
+    handleGetUser();
+  },[]);
+
+
   const [formData, setFormData] = useState({
-    username: '',
+    fullname: '',
     email: '',
     role: '',
     status: 'active',
@@ -20,25 +49,25 @@ const EditUserPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+    // Call API to update user
     console.log('Form submitted:', formData);
   };
 
   return (
     <div className='flex-1 overflow-auto relative z-10'>
-      <Header title='Edit User'/>
+      <Header title='Edit User' />
       <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-11">
-        <h2 className="text-2xl font-bold mb-6">Edit User</h2>
+        <h2 className="text-2xl font-bold mb-6">Chỉnh sửa tài khoản</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 font-bold mb-2">
-              Username
+            <label htmlFor="fullname" className="block text-gray-700 font-bold mb-2">
+              Họ tên
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              id="fullname"
+              name="fullname"
+              value={user.fullName}
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
@@ -53,7 +82,7 @@ const EditUserPage = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={user.email}
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
@@ -62,13 +91,13 @@ const EditUserPage = () => {
           </div>
           <div className="mb-4">
             <label htmlFor="role" className="block text-gray-700 font-bold mb-2">
-              Role
+              Vai trò
             </label>
             <input
               type="text"
               id="role"
               name="role"
-              value={formData.role}
+              value={user.role == 1 ? 'Admin' : 'User'} 
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
@@ -82,12 +111,12 @@ const EditUserPage = () => {
             <select
               id="status"
               name="status"
-              value={formData.status}
+              value={user.status == true ? 'active' : 'disable'}
               onChange={handleChange}
               className="shadow  border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
               <option value="active">Active</option>
-              <option value="inactive">In Active</option>
+              <option value="disable">Disable</option>
             </select>
           </div>
           <div className="flex items-center justify-center">

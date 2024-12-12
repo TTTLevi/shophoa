@@ -1,26 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom';
-import { Edit, Search, Trash2 } from 'lucide-react'
-
-const userData = [
-  { id: 1, name: "John Doe", email: "john@example.com", role: "User", status: "Active" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Active" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "User", status: "Inactive" },
-  { id: 4, name: "Alice Brown", email: "alice@example.com", role: "User", status: "Active" },
-  { id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Admin", status: "Active" },
-];
+import { Edit, Search } from 'lucide-react'
+import { apiGetAllUser } from '../../../apis/apiUse';
 
 const UsersTable = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [filteredUsers, setFilteredUsers] = useState(userData)
+  const [userData, setUserData] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([])
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await apiGetAllUser()
+      console.log(response.data)
+      if (response.data) {
+        setUserData(response.data)
+        setFilteredUsers(response.data)
+      }
+    }
+    fetchUsers()
+  }, [])
+
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase()
     setSearchTerm(term)
-    const filtered = userData.filter((user) => user.name.toLowerCase().includes(term) || user.email.toLowerCase().includes(term))
+    const filtered = userData.filter((user) => user.fullName.toLowerCase().includes(term))
     setFilteredUsers(filtered)
   }
 
@@ -45,7 +52,7 @@ const UsersTable = () => {
         </div>
       </div>
 
-      <div className='overflow-x-auto'>
+      <motion.div className='overflow-x-auto'>
         <table className='min-w-full divide-y divide-gray-700'>
           <thead className='bg-gray-200 '>
             <tr>
@@ -68,7 +75,7 @@ const UsersTable = () => {
           </thead>
 
           <tbody className='divide-y divide-gray-700 bg-white'>
-            {filteredUsers.map((user) => (
+            {filteredUsers?.map((user) => (
               <motion.tr key={user.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -78,11 +85,11 @@ const UsersTable = () => {
                   <div className='flex items-center'>
                     <div className='flex-shrink-0 h-10 w-10'>
                       <div className='h-10 w-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-white font-semibold'>
-                        {user.name.charAt(0).toUpperCase()}
+                        {user?.fullName?.charAt(0).toUpperCase()}
                       </div>
                     </div>
                     <div className='ml-4'>
-                      <div className='text-sm font-medium text-gray-900'>{user.name}</div>
+                      <div className='text-sm font-medium text-gray-900'>{user.fullName}</div>
                     </div>
                   </div>
                 </td>
@@ -93,35 +100,34 @@ const UsersTable = () => {
 
                 <td className='px-5 py-4 whitespace-nowrap'>
                   <span className='px-3 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
-                    {user.role}
+                    {user.role_id === 2 ? "User" : "Admin"}
                   </span>
                 </td>
 
                 <td className='px-6 py-4 whitespace-nowrap'>
-									<span
-										className={`px-3 inline-flex text-xs leading-5 font-semibold rounded-full ${
-											user.status === "Active"
-												? "text-green-100 bg-blue-700"
-												: "bg-red-800 text-red-100"
-										}`}
-									>
-										{user.status}
-									</span>
-								</td>
+                  <span
+                    className={`px-3 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status === true
+                      ? "text-green-100 bg-blue-700"
+                      : "bg-red-800 text-red-100"
+                      }`}
+                  >
+                    {user.status === true ? "Active" : "Disabled"}
+                  </span>
+                </td>
 
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									<button 
+                  <button
                     className='text-indigo-400 hover:text-indigo-300 mr-2'
-                    onClick={() => navigate(`/admin/users/${user.id}`)}  
+                    onClick={() => navigate(`/admin/users/${user.id}`)}
                   ><Edit size={21} /></button>
-									<button className='text-red-400 hover:text-red-300'><Trash2 size={21} /></button>
-								</td>
+                  {/* <button className='text-red-400 hover:text-red-300'><Trash2 size={21} /></button> */}
+                </td>
 
               </motion.tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </motion.div>
   )
 }

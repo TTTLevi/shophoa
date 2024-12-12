@@ -15,10 +15,10 @@ const OverviewPage = () => {
   const {me} = useUserStore()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if(!me) navigate('/login')
-  //   if(me?.role === 2) navigate('/')
-  // }, [me])
+  useEffect(() => {
+    if(!me) navigate('/login')
+    if(me?.role === 2) navigate('/')
+  }, [me])
   
   return (
     <div className="flex-1 overflow-auto relative z-10">

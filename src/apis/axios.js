@@ -1,19 +1,21 @@
-import axios from "axios"
+import axios from "axios";
 
-const axiosInstance = axios.create({ baseURL: "http://localhost:8080" })
+const axiosInstance = axios.create({ baseURL: "http://localhost:8080" });
 
 axiosInstance.interceptors.request.use((config) => {
-  const store = window.localStorage.getItem("shopbanhoa/user")
+  const store = window.localStorage.getItem("shophoa/user");
   if (store) {
-    const parsedStore = JSON.parse(store)
+    const parsedStore = JSON.parse(store);
+
     if (parsedStore && parsedStore.state?.accessToken) {
-      config.headers.Authorization = `Bearer ${parsedStore.state?.accessToken}`
+      config.headers.Authorization = `Bearer ${parsedStore.state?.accessToken}`;
     }
   }
+  console.log(store);
+  console.log("hello");
+  return config;
+});
 
-  return config
-})
+axiosInstance.interceptors.response.use((response) => response);
 
-axiosInstance.interceptors.response.use((response) => response)
-
-export default axiosInstance
+export default axiosInstance;
