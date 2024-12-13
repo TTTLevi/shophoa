@@ -1,5 +1,4 @@
 
-
 const InfoSection = () => {
   const infoItems = [
     {
