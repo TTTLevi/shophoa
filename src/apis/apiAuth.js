@@ -1,6 +1,5 @@
 import axiosInstance from "./axios"
 
-
 export const apiLogin = (payload) =>
   axiosInstance({
     method: "post",
@@ -8,10 +7,9 @@ export const apiLogin = (payload) =>
     data: payload,
   })
 
-
 export const apiRegister = (payload) =>
   axiosInstance({
     method: "post",
-    url: "/auth/signup",
+    url: "/auth/register",
     data: payload,
   })

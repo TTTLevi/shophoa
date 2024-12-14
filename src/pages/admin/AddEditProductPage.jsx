@@ -1,22 +1,24 @@
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { useNavigate } from 'react-router-dom';
-import { useDropzone } from 'react-dropzone';
-import Header from "../../components/admin/common/Header";
-import { apiGetAllCategory } from '../../apis/apiCategory';
-import { apiAddProduct } from '../../apis/apiProduct';
-import { toast } from 'react-toastify';
+import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
+import { useNavigate } from "react-router-dom"
+import { useDropzone } from "react-dropzone"
+import Header from "../../components/admin/common/Header"
+import { apiGetAllCategory } from "../../apis/apiCategory"
+import { apiAddProduct, apiGetProductById, apiUpdateProduct } from "../../apis/apiProduct"
+import { toast } from "react-toastify"
+import { useParams } from "react-router-dom"
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
-const VALID_FILE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-const MAX_FILE_COUNT = 7; 
+const MAX_FILE_SIZE = 4 * 1024 * 1024 // 4MB
+const VALID_FILE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+const MAX_FILE_COUNT = 7
 
 const AddEditProductPage = () => {
-  const navigate = useNavigate();
-  const [images, setImages] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [images, setImages] = useState([])
+  const [categories, setCategories] = useState([])
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -25,102 +27,138 @@ const AddEditProductPage = () => {
     unit: "Bó",
     description: "",
     images: [],
-  });
+  })
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleDescriptionChange = (value) => {
-    setFormData({ ...formData, description: value });
-  };
+    setFormData({ ...formData, description: value })
+  }
 
   const onDrop = (acceptedFiles, fileRejections) => {
-    const validFiles = [];
-    let invalidCount = 0;
+    const validFiles = []
+    let invalidCount = 0
 
     acceptedFiles.forEach((file) => {
       if (
         VALID_FILE_TYPES.includes(file.type) &&
-        file.size <= MAX_FILE_SIZE && 
+        file.size <= MAX_FILE_SIZE &&
         images.length + validFiles.length < MAX_FILE_COUNT
       ) {
         validFiles.push(
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
-        );
+        )
       } else {
-        invalidCount++;
+        invalidCount++
       }
-    });
+    })
 
     if (invalidCount > 0) {
-      toast.error(`Tệp không hợp lệ hoặc vượt quá giới hạn.`);
+      toast.error(`Tệp không hợp lệ hoặc vượt quá giới hạn.`)
     }
 
     fileRejections.forEach((rejection) => {
-      toast.error(`"${rejection.file.name}" không hợp lệ hoặc vượt quá kích thước cho phép.`);
-    });
+      toast.error(`"${rejection.file.name}" không hợp lệ hoặc vượt quá kích thước cho phép.`)
+    })
 
-    setImages((prevImages) => [...prevImages, ...validFiles]);
-  };
+    setImages((prevImages) => [...prevImages, ...validFiles])
+  }
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-  };
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("category_id", formData.category);
-    data.append("price", formData.price);
-    data.append("unit", formData.unit);
-    data.append("theme", formData.theme);
-    data.append("description", formData.description);
+    const data = new FormData()
+    data.append("name", formData.name)
+    data.append("category_id", formData.category)
+    data.append("price", formData.price)
+    data.append("unit", formData.unit)
+    data.append("theme", formData.theme)
+    data.append("description", formData.description)
 
     if (images.length > 0) {
       images.forEach((image) => {
-        data.append("images", image); // Append từng file vào FormData
-      });
+        data.append("images", image) // Append từng file vào FormData
+      })
     } else {
-      toast.error("Vui lòng chọn ít nhất một hình ảnh");
-      return;
+      toast.error("Vui lòng chọn ít nhất một hình ảnh")
+      return
     }
 
     try {
-      const response = await apiAddProduct(data);
-      toast.success("Thêm sản phẩm thành công");
-      navigate("/admin/san-pham");
-      console.log(response.data);
+      if (id) {
+        const data = {
+          name: formData.name,
+          category_id: formData.category,
+          theme: formData.theme,
+          price: formData.price,
+          unit: formData.unit,
+          description: formData.description,
+          listImage: formData.images,
+        }
+        const response = await apiUpdateProduct(id, data)
+        console.log(response)
+      } else {
+        const response = await apiAddProduct(data)
+        toast.success("Thêm sản phẩm thành công")
+        navigate("/admin/san-pham")
+        console.log(response.data)
+      }
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error adding product:", error)
     }
-  };
+  }
 
   useEffect(() => {
     apiGetAllCategory().then((res) => {
-      setCategories(res.data);
-    });
-
+      setCategories(res.data)
+    })
     return () => {
       // Cleanup URL.createObjectURL
-      images.forEach((image) => URL.revokeObjectURL(image.preview));
-    };
-  }, [images]);
+      images.forEach((image) => URL.revokeObjectURL(image.preview))
+    }
+  }, [images])
+
+  const handleGetProductById = async (id) => {
+    const res = await apiGetProductById(id)
+    if (res.status === 200) {
+      setFormData({
+        name: res.data.name,
+        category: res.data.category_id,
+        theme: res.data.theme,
+        price: res.data.price,
+        unit: res.data.unit,
+        description: res.data.description,
+        images: res.data.listImage,
+      })
+      setImages(res.data.listImage)
+    }
+    console.log(res)
+  }
+
+  useEffect(() => {
+    if (id) {
+      handleGetProductById(id)
+    }
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: "image/*",
     multiple: true,
-  });
+  })
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
-      <Header title='Thêm sản phẩm' />
+      <Header title="Thêm sản phẩm" />
       <motion.div
         className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-5 border border-gray-700 mt-11 ml-11 mr-11"
         initial={{ opacity: 0, y: 20 }}
@@ -135,14 +173,14 @@ const AddEditProductPage = () => {
               className="border-dashed border-2 border-blue-500 p-7 rounded-md cursor-pointer text-center"
             >
               <input {...getInputProps()} />
-              <p className='text-green-300'>Kéo thả hình hoặc nhấn để chọn tệp</p>
+              <p className="text-green-300">Kéo thả hình hoặc nhấn để chọn tệp</p>
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-4">
               {images.map((file, index) => (
                 <div key={index} className="relative group">
                   <img
-                    src={file.preview}
+                    src={file.preview || file}
                     alt={`preview-${index}`}
                     className="w-full h-32 object-cover rounded-md shadow-md"
                   />
@@ -250,7 +288,7 @@ const AddEditProductPage = () => {
         {/* <div dangerouslySetInnerHTML={{ __html: formData.description }} /> */}
       </motion.div>
     </div>
-  );
-};
+  )
+}
 
-export default AddEditProductPage;
+export default AddEditProductPage
