@@ -9,6 +9,10 @@ import { apiGetAllCategory } from '../../apis/apiCategory';
 import { apiAddProduct } from '../../apis/apiProduct';
 import { toast } from 'react-toastify';
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
+const VALID_FILE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const MAX_FILE_COUNT = 7; 
+
 const AddEditProductPage = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
@@ -32,13 +36,35 @@ const AddEditProductPage = () => {
     setFormData({ ...formData, description: value });
   };
 
-  const onDrop = (acceptedFiles) => {
-    const newImages = acceptedFiles.map((file) =>
-      Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      })
-    );
-    setImages((prevImages) => [...prevImages, ...newImages]);
+  const onDrop = (acceptedFiles, fileRejections) => {
+    const validFiles = [];
+    let invalidCount = 0;
+
+    acceptedFiles.forEach((file) => {
+      if (
+        VALID_FILE_TYPES.includes(file.type) &&
+        file.size <= MAX_FILE_SIZE && 
+        images.length + validFiles.length < MAX_FILE_COUNT
+      ) {
+        validFiles.push(
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        );
+      } else {
+        invalidCount++;
+      }
+    });
+
+    if (invalidCount > 0) {
+      toast.error(`Tệp không hợp lệ hoặc vượt quá giới hạn.`);
+    }
+
+    fileRejections.forEach((rejection) => {
+      toast.error(`"${rejection.file.name}" không hợp lệ hoặc vượt quá kích thước cho phép.`);
+    });
+
+    setImages((prevImages) => [...prevImages, ...validFiles]);
   };
 
   const handleRemoveImage = (index) => {
