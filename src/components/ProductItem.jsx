@@ -1,10 +1,11 @@
 import PropTypes from "prop-types"
 import { useNavigate } from "react-router-dom"
 import useCartStore from "../zustand/useCartStore"
-import { listData } from "../utils/mockData"
 import { toast } from "react-toastify"
-
+import useUserStore from "../zustand/useUserStore"
 const ProductItem = ({ product }) => {
+  const {me} = useUserStore();
+
   const navigate = useNavigate()
 
   // const cart = useCartStore((state) => state.cart)
@@ -14,15 +15,22 @@ const ProductItem = ({ product }) => {
     navigate(`/product-detail/${id}`)
   }
 
-  const handleAddCart = (id) => {
-    const foundProduct = listData.find((el) => el.id === id)
-    if (foundProduct) {
-      addToCart(foundProduct, 1)
-      toast.success(`Đã thêm ${foundProduct.name} vào giỏ hàng!`, {
+  const handleAddCart = () => {
+    if (!me) {
+      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng", {
+        position: "top-right",
+        autoClose: 2000,
+      })
+      navigate("/login")
+    }
+    else {
+      addToCart(product, 1)
+      toast.success(`Đã thêm ${product.name} vào giỏ hàng!`, {
         position: "top-right",
         autoClose: 2000,
       })
     }
+    
   }
 
   return (
@@ -32,13 +40,14 @@ const ProductItem = ({ product }) => {
         onClick={() => handleClickProduct(product.id)}
       >
         <img
-          src={product.image}
+          src={product?.listImage[0]}
           alt={product.name}
-          className="object-cover transition-transform duration-300 hover:scale-110"
+          className="object-cover transition-transform duration-300 hover:scale-110 w-48 h-60"  
         />
       </div>
       <h3>{product.name}</h3>
-      <p>{product.price} VNĐ</p>
+      {/* <p>{product.price} VNĐ</p> */}
+      <p>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
       <div className="flex items-center justify-center">
         <button
           onClick={() => handleAddCart(product.id)}

@@ -54,6 +54,13 @@ const useCartStore = create(
             totalAmount: state.calculateTotal(updatedCart),
           };
         }),
+        clearCart: () =>
+          set(() => {
+            return {
+              cart: [],
+              totalAmount: 0,
+            };
+          }),
 
       updateQuantity: (productId, quantity) =>
         set((state) => {

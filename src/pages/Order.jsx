@@ -1,7 +1,52 @@
 import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
 
+import useUserStore from "../zustand/useUserStore"
+import { apiCreateOrder } from "../apis/apiOrder";
+import { toast } from "react-toastify";
+
+import useCartStore from "../zustand/useCartStore";
+
+import { useNavigate } from "react-router-dom";
 const Order = ({ order }) => {
+  const { me } = useUserStore();
+  const navigate = useNavigate();
+
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  console.log(order)
+
+  const handleCreateOrder = async () => {
+    const data = {
+      address: `${order.address} ${order.ward} ${order.district}  Hồ Chí Minh`,
+      phone: order.phone,
+      createTime: new Date().toISOString(),
+      total: order.totalAmount,
+      code: order.orderNumber,
+      status: "handling",
+      customerId: me.id,
+      paymentId: 1,
+      productOrders: [
+        ...order.products.map((product) => ({
+          productId: product.id,
+          quantity: product.quantity
+        }))
+      ]
+    }
+
+    const res = await apiCreateOrder(data);
+    if (res.status === 200) {
+      toast.success("Đặt hàng thành công")
+      clearCart()
+      navigate("/")
+      console.log("Đặt hàng thành công")
+    } else {
+      toast.error("Lỗi đặt hàng!!!")
+    }
+
+
+    console.log(data)
+  }
+
   return (
     <div className="container mx-auto py-8 px-4 md:px-16 lg:px-24">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
@@ -33,7 +78,7 @@ const Order = ({ order }) => {
               {order.products.map((product) => (
                 <div key={product.id} className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
-                    <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
+                    <img src={product?.listImage[0]} alt={product.name} className="w-16 h-16 object-cover rounded" />
                     <div>
                       <p className="font-medium">{product.name}</p>
                       <p className="text-gray-500">Số lượng: {product.quantity}</p>
@@ -55,12 +100,12 @@ const Order = ({ order }) => {
           </div>
 
           <div className="text-center pt-4">
-            <Link 
-              to="/"
+            <div
+              onClick={handleCreateOrder}
               className="inline-block bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 transition-colors"
             >
-              Tiếp tục mua hàng
-            </Link>
+              Xác nhận thanh toán
+            </div>
           </div>
         </div>
       </div>

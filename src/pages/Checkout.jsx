@@ -14,9 +14,10 @@ const Checkout = ({setOrder}) => {
     email: "",
     phone: "",
     district: "",
-    ward: "",
+    ward: "", 
     address: ""
   });
+  
 
   const [errors, setErrors] = useState({});
 
@@ -241,7 +242,7 @@ const Checkout = ({setOrder}) => {
             {cart.map((item) => (
               <div key={item.id} className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover" />
+                  <img src={item?.listImage[0]} alt={item.name} className="w-16 h-16 object-cover" />
                   <div>
                     <h4 className="text-sm font-medium">{item.name}</h4>
                     <p className="text-sm text-gray-500">{item.quantity} x {item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>

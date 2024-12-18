@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import useUserStore from "../../../zustand/useUserStore"
 import { LogOut } from "lucide-react"
+import { getLastName } from "../../../utils/helper"
 
 const Header = ({title}) => {
   const {me, logout} = useUserStore()
@@ -17,7 +18,7 @@ const Header = ({title}) => {
         {
           me && (
             <div className="flex items-center space-x-2">
-              <p className="text-gray-100">Xin chào: {me.username.toUpperCase()}</p>
+              <p className="text-gray-100">Xin chào: {getLastName(me.username.toUpperCase())}</p>
               <span onClick={handleLogout} style={{cursor: 'pointer'}}><LogOut size={20} style={{color: "red"}}/></span>
             </div>
           )

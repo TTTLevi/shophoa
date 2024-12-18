@@ -1,11 +1,13 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { FaFilter } from "react-icons/fa"
-import { Eye, Trash } from "lucide-react"
+import { Eye } from "lucide-react"
 import { Link } from "react-router-dom"
 
 import Header from "../../components/admin/common/Header"
 import Pagination from "../../components/admin/common/Pagination"
+import { apiGetAllOrder, apiUpdateOrder } from "../../apis/apiOrder"
+import { formatDateTime, formatCurrency } from "../../utils/helper"
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([])
@@ -18,24 +20,15 @@ const OrdersPage = () => {
   })
   const [filteredOrders, setFilteredOrders] = useState([])
 
+  const handleGetOrders = async () => {
+    const res = await apiGetAllOrder()
+    console.log(res.data)
+    setOrders(res.data)
+    setFilteredOrders(res.data)
+  }
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      const data = [
-        { id: 1, customer: "Nguyễn Văn A", status: "processing", address: "123 Nguyễn Trãi, Hà Nội", total: 100000, createdAt: "2023-03-01" },
-        { id: 2, customer: "Nguyễn Văn B", status: "shipping", address: "456 Lê Thánh Tôn, Hà Nội", total: 200000, createdAt: "2023-03-02" },
-        { id: 3, customer: "Nguyễn Văn C", status: "delivered", address: "789 Trần Hưng Đạo, Hà Nội", total: 300000, createdAt: "2023-03-03" },
-        { id: 4, customer: "Nguyễn Văn D", status: "processing", address: "123 Nguyễn Trãi, Hà Nội", total: 400000, createdAt: "2023-03-04" },
-        { id: 5, customer: "Nguyễn Văn E", status: "shipping", address: "456 Lê Thánh Tôn, Hà Nội", total: 500000, createdAt: "2023-03-05" },
-        { id: 6, customer: "Nguyễn Văn F", status: "delivered", address: "789 Trần Hưng Đạo, Hà Nội", total: 600000, createdAt: "2023-03-06" },
-        { id: 7, customer: "Nguyễn Văn G", status: "processing", address: "123 Nguyễn Trãi, Hà Nội", total: 700000, createdAt: "2023-03-07" },
-        { id: 8, customer: "Nguyễn Văn H", status: "shipping", address: "456 Lê Thánh Tôn, Hà Nội", total: 800000, createdAt: "2023-03-08" },
-        { id: 9, customer: "Nguyễn Văn I", status: "delivered", address: "789 Trần Hưng Đạo, Hà Nội", total: 900000, createdAt: "2023-03-09" },
-        { id: 10, customer: "Nguyễn Văn J", status: "processing", address: "123 Nguyễn Trãi, Hà Nội", total: 1000000, createdAt: "2023-03-10" },
-      ]
-      setOrders(data)
-      setFilteredOrders(data)
-    }
-    fetchOrders()
+    handleGetOrders()
   }, [])
 
   const indexOfLastOrder = currentPage * ordersPerPage
@@ -52,21 +45,53 @@ const OrdersPage = () => {
     })
   }
 
+  const handleUpdateStatus = async (id, value) => {
+    const res = await apiUpdateOrder(id, value)
+    console.log(res)
+    if (res.status === 200) {
+      handleGetOrders()
+    }
+  }
+
+  // const handleFilter = () => {
+  //   let filtered = orders;
+  //   if (filter.price === "desc") {
+  //     filtered = filtered.sort((a, b) => b.total - a.total);
+  //   } else {
+  //     filtered = filtered.sort((a, b) => a.total - b.total);
+  //   }
+  //   if (filter.fromDate) {
+  //     filtered = filtered.filter(order => new Date(order.createdAt) >= new Date(filter.fromDate));
+  //   }
+  //   if (filter.toDate) {
+  //     filtered = filtered.filter(order => new Date(order.createdAt) <= new Date(filter.toDate));
+  //   }
+  //   setFilteredOrders(filtered)
+  // }
+
   const handleFilter = () => {
-    let filtered = orders;
+    let filtered = [...orders];
+
     if (filter.price === "desc") {
       filtered = filtered.sort((a, b) => b.total - a.total);
-    } else {
+    } else if (filter.price === "asc") {
       filtered = filtered.sort((a, b) => a.total - b.total);
     }
+
     if (filter.fromDate) {
-      filtered = filtered.filter(order => new Date(order.createdAt) >= new Date(filter.fromDate));
+      const fromDate = new Date(filter.fromDate);
+      filtered = filtered.filter(order => new Date(order.createTime) >= fromDate);
     }
+
     if (filter.toDate) {
-      filtered = filtered.filter(order => new Date(order.createdAt) <= new Date(filter.toDate));
+      const toDate = new Date(filter.toDate);
+      toDate.setHours(23, 59, 59, 999);
+      filtered = filtered.filter(order => new Date(order.createTime) <= toDate);
     }
-    setFilteredOrders(filtered)
+
+    setFilteredOrders(filtered);
   }
+
 
 
   return (
@@ -118,9 +143,9 @@ const OrdersPage = () => {
 
               <button
                 onClick={handleFilter}
-                className="relative min-w-[90px] bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center">
+                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-3 rounded-lg flex items-center justify-center">
                 Lọc
-                <FaFilter className="absolute right-4" />
+                <FaFilter />
               </button>
 
             </div>
@@ -128,7 +153,7 @@ const OrdersPage = () => {
           <table className="w-full text-sm text-gray-700 border-collapse bg-white rounded-lg">
             <thead>
               <tr>
-                <th className="px-4 py-2 border-b text-left">ID</th>
+                <th className="px-4 py-2 border-b text-left">STT</th>
                 <th className="px-4 py-2 border-b text-left">Khách hàng</th>
                 <th className="px-4 py-2 border-b text-left">Tình trạng</th>
                 <th className="px-4 py-2 border-b text-left">Địa chỉ</th>
@@ -138,46 +163,35 @@ const OrdersPage = () => {
               </tr>
             </thead>
             <tbody>
-              {currentOrders.map(order => (
+              {currentOrders.map((order, index) => (
                 <tr key={order.id} className="hover:bg-gray-100">
-                  <td className="px-4 py-2 border-b">{order.id}</td>
-                  <td className="px-4 py-2 border-b">{order.customer}</td>
+                  <td className="px-4 py-2 border-b">{index + 1}</td>
+                  <td className="px-4 py-2 border-b">{order.customerName}</td>
                   <td className="px-4 py-2 border-b">
                     <select
                       value={order.status}
-                      onChange={() => {
-                        // Cập nhật tình trạng đơn hàng
+                      onChange={(e) => {
+                        handleUpdateStatus(order.id, e.target.value)
 
                       }}
                       className="py-2 pl-3 pr-10 text-sm text-gray-700 border border-gray-300 rounded-lg"
                     >
-                      <option value="processing">Đang xử lý</option>
-                      <option value="shipping">Đang giao hàng</option>
+                      <option value="handling">Đang xử lý</option>
+                      <option value="delivering">Đang giao hàng</option>
                       <option value="delivered">Đã giao</option>
                       <option value="cancelled">Đã hủy</option>
                     </select>
                   </td>
                   <td className="px-4 py-2 border-b">{order.address}</td>
-                  <td className="px-4 py-2 border-b">{order.total}</td>
-                  <td className="px-4 py-2 border-b">{order.createdAt}</td>
+                  <td className="px-4 py-2 border-b">{formatCurrency(order.total)}</td>
+                  <td className="px-4 py-2 border-b">{formatDateTime(order.createTime)}</td>
                   <td className="px-4 py-2 border-b">
                     <button
-                      onClick={() => {
-                        // Chỉnh sửa đơn hàng
-                      }}
                       className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-1 px-1 rounded-lg mr-2"
                     >
                       <Link to={`/admin/orders/${order.id}`} className="inline-block text-green-300 hover:cursor-pointer">
                         <Eye size={21} className="inline-block text-green-300 hover:cursor-pointer" />
                       </Link>
-                    </button>
-                    <button
-                      onClick={() => {
-                        // Xóa đơn hàng
-                      }}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded-lg"
-                    >
-                      <Trash size={21} className="inline-block text-yellow-200 hover:cursor-pointer" />
                     </button>
                   </td>
                 </tr>

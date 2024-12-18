@@ -50,7 +50,7 @@ const Login = () => {
     if (response.status === 200) {
       if (response.data.status === true) {
         setAccessToken(response.data.token);
-        setMe({ username: response.data.fullname, role: response.data.roleId, status: response.data.status, email: response.data.email });
+        setMe({ id:response.data.id, username: response.data.fullname, role: response.data.roleId, status: response.data.status, email: response.data.email });
         if (response.data.roleId === 1) {
           onToast("success");
           navigate("/admin");

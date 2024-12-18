@@ -11,8 +11,7 @@ axiosInstance.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${parsedStore.state?.accessToken}`;
     }
   }
-  console.log(store);
-  console.log("hello");
+  // console.log(store);
   return config;
 });
 

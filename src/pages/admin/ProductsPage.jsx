@@ -6,7 +6,6 @@ const ProductsPage = () => {
     <div className="flex-1 overflow-auto relative z-10">
       <Header title='Sản phẩm'/>
 
-      {/* Products table */}
       <ProductTable/>
     </div>
   )

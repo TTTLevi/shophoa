@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { apiRegister } from "../apis/apiAuth";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [fullname, setFullName] = useState('');
-  // const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,7 +17,6 @@ const Register = () => {
     if (validateForm()) {
       let user = {
         fullName: fullname,
-        // name: username,
         email,
         password,
       };
@@ -34,10 +33,6 @@ const Register = () => {
     if (!fullname) {
       tempErrors.fullname = 'Họ và tên không được để trống';
     }
-
-    // if (!username) {
-    //   tempErrors.username = 'Tên đăng nhập không được để trống';
-    // }
 
     if (!email) {
       tempErrors.email = 'Email không được để trống';
@@ -92,22 +87,6 @@ const Register = () => {
               />
               {errors.fullname && <p className="text-red-500 text-xs mt-1">{errors.fullname}</p>}
             </div>
-
-            {/* <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                Tên đăng nhập
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={`w-full px-4 py-2 border ${errors.username ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 placeholder-gray-400`}
-                placeholder="Nhập username"
-              />
-              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
-            </div> */}
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -164,6 +143,13 @@ const Register = () => {
           >
             Đăng ký
           </button>
+
+          <div className="text-center">
+            <span className="text-gray-500 text-sm">Đã có tài khoản? </span>
+            <Link to="/login" className="text-sm font-medium text-green-600 hover:text-green-500 transition duration-200">
+              Đăng nhập ngay
+            </Link>
+          </div>
         </form>
       </div>
     </div>

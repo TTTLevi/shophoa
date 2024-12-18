@@ -1,13 +1,38 @@
-import { Categories, listData } from "../utils/mockData"
+
 import { FaListUl } from "react-icons/fa"
 import Carousel from "../components/Carousel"
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import InfoSection from "../components/InfoSection"
 import ProductSection from "../components/ProductSection"
+import {  apiGetAllCategoryPublic } from "../apis/apiCategory"
+import {apiGetAllProductPublic } from "../apis/apiProduct"
+
+
 
 const Home = () => {
   const [showCategories, setShowCategories] = useState(false)
+
+  const [categories, setCategories] = useState([]);
+  const [product,setProduct] = useState([]);
+
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiGetAllCategoryPublic();
+      console.log(response.data);
+      setCategories(response.data);
+    };
+    fetchCategories();
+
+    const fetchProduct = async () => {
+      const response = await apiGetAllProductPublic();
+      console.log(response.data);
+      setProduct(response.data);
+    };
+    fetchProduct();
+
+  }, [])
 
   return (
     <div className="bg-white mt-3 px-4 md:px-16 lg:px-20">
@@ -47,9 +72,9 @@ const Home = () => {
               !showCategories ? "hidden md:block" : "block"
             }`}
           >
-            {Categories.map((category, index) => (
+            {categories.map((category, index) => (
               <li key={index} className="border-b-[1px] hover:cursor-pointer hover:text-green-600">
-                <Link to={`/${category.slug}`} className="flex items-center gap-2">
+                <Link to={`/${category.code}`} className="flex items-center gap-2">
                   <span>🌸</span>
                   {category.name}
                 </Link>
@@ -67,11 +92,11 @@ const Home = () => {
         <InfoSection />
       </div>
 
-      {Categories.map((el) => (
+      {categories.map((el) => (
         <ProductSection
-          key={el.slug}
+          key={el.code}
           title={el.name}
-          products={listData.filter((p) => p.category === el.slug)}
+          products={product.filter((p) => p.category_id === el.id)}
         />
       ))}
     </div>

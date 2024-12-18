@@ -1,20 +1,33 @@
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
-
-const categoryData = [
-  { name: "Hoa Chúc Mừng", value: 10 },
-	{ name: "Hoa Chia Buồn", value: 10 },
-	{ name: "Hoa Tặng & Hoa Dịch Vụ", value: 20 },
-	{ name: "Hoa Chậu Thiết Kế", value: 20 },
-	{ name: "Cây Xanh", value: 20 },
-];
+import { apiGetCateChartData } from '../../../apis/apiCategory';
 
 const COLORS = ["#4F46E5", "#A57FF2", "#EC4899", "#10B981", "#F59E0B"];
 
 const CategoryDistributionChart = () => {
+  const [cateData, setCateData] = useState([])
+
+  const handleGetCateData = async () => {
+    const res = await apiGetCateChartData()
+    console.log(res.data)
+    const formattedData = res.data.map(el => ({
+
+      name: el.name,
+      value: el.countProduct,
+
+    }))
+    setCateData(formattedData)
+  }
+
+  useEffect(() => {
+    handleGetCateData()
+  }, [])
+
+
   return (
     <motion.div
-      className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-5 border border-gray-700'
+      className='bg-gray-900 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-5 border border-gray-700'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0. }}
@@ -24,16 +37,16 @@ const CategoryDistributionChart = () => {
         <ResponsiveContainer width={"100%"} height={"100%"}>
           <PieChart>
             <Pie
-              data={categoryData}
+              data={cateData}
               cx='50%'
               cy='50%'
               labelLine={true}
               outerRadius={70}
               fill='#8884d8'
               dataKey="value"
-              label = {({ name, percent}) => `${name} ${(percent * 100).toFixed(0)}%` }
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
-              {categoryData.map((entry, index) => (
+              {cateData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

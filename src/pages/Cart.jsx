@@ -30,7 +30,7 @@ const Cart = () => {
                     className="grid grid-cols-[2.5fr_1fr_1fr_1fr_0.5fr] items-center border-b border-gray-300 p-4 mb-4"
                   >
                     <div className="flex items-center space-x-7">
-                      <img src={product.image} alt={product.name} className="w-20 h-20 object-contain" />
+                      <img src={product?.listImage[0]} alt={product.name} className="w-20 h-20 object-contain" />
                       <div className="flex-1">
                         <h3 className="text-sm font-semibold">{product.name}</h3>
                       </div>
@@ -73,7 +73,7 @@ const Cart = () => {
               </div>
               <div className="flex justify-between items-center pb-1 mb-3">
                 <span>Phí giao hàng tạm tính</span>
-                <span className="font-medium">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(30000)}</span>
+                <span className="font-medium">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(0)}</span>
               </div>
               <div className="flex justify-between items-start pb-1 mb-3 border-b border-gray-300">
                 <span>Tổng tiền</span>
@@ -82,7 +82,7 @@ const Cart = () => {
                     {new Intl.NumberFormat('vi-VN', {
                       style: 'currency',
                       currency: 'VND'
-                    }).format(cart.reduce((acc, curr) => acc + curr.totalPrice, 0) + 30000)}
+                    }).format(cart.reduce((acc, curr) => acc + curr.totalPrice, 0) + 0)}
                   </span>
                   <span className="text-sm text-gray-500">(Đã bao gồm VAT)</span>
                 </div>

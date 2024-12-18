@@ -8,6 +8,7 @@ const UsersTable = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [userData, setUserData] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
+  const [roleFilter, setRoleFilter] = useState('')
 
   const navigate = useNavigate()
 
@@ -23,11 +24,24 @@ const UsersTable = () => {
     fetchUsers()
   }, [])
 
-
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase()
     setSearchTerm(term)
-    const filtered = userData.filter((user) => user.fullName.toLowerCase().includes(term))
+    filterUsers(term, roleFilter)
+  }
+
+  const handleRoleChange = (e) => {
+    const selectedRole = e.target.value
+    setRoleFilter(selectedRole)
+    filterUsers(searchTerm, selectedRole)
+  }
+
+  const filterUsers = (searchTerm, roleFilter) => {
+    const filtered = userData.filter((user) => {
+      const matchesSearch = user.fullName.toLowerCase().includes(searchTerm)
+      const matchesRole = roleFilter ? user.role_id === parseInt(roleFilter) : true
+      return matchesSearch && matchesRole
+    })
     setFilteredUsers(filtered)
   }
 
@@ -40,15 +54,29 @@ const UsersTable = () => {
     >
       <div className='flex justify-between items-center mb-6'>
         <h2 className='text-xl font-semibold text-orange-500'>Users</h2>
-        <div className='relative'>
-          <input
-            type='text'
-            placeholder='Tìm kiếm...'
-            className='bg-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-          <Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
+        <div className='flex gap-3 justify-center items-center'>
+          <div className='relative'>
+            <input
+              type='text'
+              placeholder='Tìm kiếm...'
+              className='bg-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+            <Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
+          </div>
+          <div>
+            <select
+              name="roleFilter"
+              className='px-3 py-2 rounded-lg'
+              value={roleFilter}
+              onChange={handleRoleChange}
+            >
+              <option value="">Tất cả</option>
+              <option value="1">Admin</option>
+              <option value="2">User</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -120,7 +148,6 @@ const UsersTable = () => {
                     className='text-indigo-400 hover:text-indigo-300 mr-2'
                     onClick={() => navigate(`/admin/users/${user.id}`)}
                   ><Edit size={21} /></button>
-                  {/* <button className='text-red-400 hover:text-red-300'><Trash2 size={21} /></button> */}
                 </td>
 
               </motion.tr>

@@ -37,3 +37,16 @@ export const apiDeleteProduct = (id) =>
     method: "delete",
     url: `/admin/deleteProduct/${id}`,
   })
+
+
+  export const apiGetAllProductPublic = () =>
+    axiosInstance({
+      method: "get",
+      url: "/public/getAllProducts",
+    })
+
+    export const apiGetProductPublicById = (id) =>
+      axiosInstance({
+        method: "get",
+        url: `/public/findProduct/${id}`,
+      })

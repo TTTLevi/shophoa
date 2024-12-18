@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import ProductItem from "../components/ProductItem"
-import { listData, Categories } from "../utils/mockData"
+import { Categories } from "../utils/mockData"
 import CategoryDescription from "../components/CategoryDescription"
 import NavBar2 from "../components/NavBar2" 
+import { apiGetCategoryByCode } from "../apis/apiCategory"
 
 const CategoryPage = () => {
   const { category } = useParams()
@@ -11,9 +12,16 @@ const CategoryPage = () => {
   const [products, setProducts] = useState([])
   
   // Thêm useEffect để cập nhật products khi category thay đổi
+
+  const handleGetProductByCate  = async () => {
+    const res = await apiGetCategoryByCode(category)
+    console.log(res);
+    setProducts(res.data)
+  }
   useEffect(() => {
-    const categoryProducts = listData.filter(product => product.category === category)
-    setProducts(categoryProducts)
+    handleGetProductByCate()
+    // const categoryProducts = listData.filter(product => product.category === category)
+    
   }, [category]) // Dependency là category
 
   const categoryTitle = Categories.find(cat => cat.slug === category)?.name

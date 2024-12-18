@@ -1,34 +1,54 @@
 import { useParams } from "react-router-dom"
-import { listData } from "../utils/mockData"
 import { useState, useEffect } from "react"
 import RelatedProducts from "../components/RelatedProducts"
 import useCartStore from "../zustand/useCartStore"
 import { toast } from "react-toastify"
+import { apiGetProductPublicById } from "../apis/apiProduct"
+import useStore from "../zustand/useStore"
+import { useNavigate } from "react-router-dom"
+import useUserStore from "../zustand/useUserStore"
 
 const ProductDetail = () => {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1)
+  const [selectedImage, setSelectedImage] = useState(product?.listImage[0])
+  const listProducts = useStore((state)=>state.listProducts)
+  const {me} = useUserStore();
+
+
   const addToCart = useCartStore((state) => state.addToCart)
 
-  const getProduct = () => {
-    const foundProduct = listData.find((product) => product.id === parseInt(id))
-    if (foundProduct) {
-      setProduct(foundProduct)
-    }
+  const getProduct = async() => {
+    const response = await apiGetProductPublicById(id)
+    console.log("product",response.data)
+    console.log("list product",listProducts)
+    setProduct(response.data)
   }
 
+
+
   useEffect(() => {
-    getProduct()
+    getProduct();
   }, [id])
 
   const handleAddCart = () => {
-    if (product && quantity > 0) {
-      addToCart(product, quantity)
-      toast.success(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`, {
+    if(!me){
+      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng", {
         position: "top-right",
         autoClose: 2000,
       })
+      navigate("/login")
+    }
+    else {
+      if (product && quantity > 0) {
+        addToCart(product, quantity)
+        toast.success(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`, {
+          position: "top-right",
+          autoClose: 2000,
+        })
+      }
     }
   }
 
@@ -39,36 +59,30 @@ const ProductDetail = () => {
         <div className="flex flex-col gap-11 sm:gap-12 sm:flex-row">
           {/* Product Image */}
           <div className="flex-1 flex flex-col-reverse sm:flex-row">
-            <div className="flex flex-col overflow-x-auto sm:overflow-y-scroll justify-between items-center sm:justify-normal sm:w-[18.7%] w-full">
-              {/* {product.images.map((image, index) => (
-              <img src={image} alt={product.name} key={index} className="w-full" />
-            ))} */}
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
+            <div className="flex flex-col overflow-x-auto sm:overflow-y-scroll justify-between items-center sm:justify-normal sm:w-[18.7%] w-full ml-3 gap-3">
+              {product?.listImage?.map((image, index) => (
+              <img 
+                src={image} 
+                alt={image} 
+                key={index} 
+                className="w-full object-cover cursor-pointer"
+                onClick={() => setSelectedImage(image)}
               />
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-              />
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-              />
+            ))}
+              
             </div>
-            <div className="sm:w-[80%] w-full">
-              <img src={product.image} alt={product.name} className="w-full h-auto" />
+            <div className="sm:w-[80%] w-full object-cover ml-1">
+              <img src={selectedImage||product?.listImage[0]} alt={product.name} className="w-full h-auto" />
             </div>
           </div>
 
           {/* Product Detail */}
           <div className="flex-1 flex flex-col gap-3 sm:gap-7">
             <h1 className="text-2xl font-medium mt-2">{product.name}</h1>
-            <p className="text-gray-500">{product.description}</p>
-            <p className="text-gray-500">{product.price} VNĐ</p>
+            <p>
+              <div dangerouslySetInnerHTML={{ __html: product.description }} />
+            </p>
+            <p className="text-orange-500 font-semibold text-[37px]">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}/{product.unit}</p>
             <hr className="sm:w-4/5 w-full" />
             <div className="flex items-center gap-2">
               <p className="text-gray-500">Số lượng</p>
@@ -101,7 +115,7 @@ const ProductDetail = () => {
               Thêm vào giỏ hàng
             </button>
             <hr className="sm:w-4/5 w-full" />
-            <div className="flex flex-col gap-2 text-sm text-gray-500 md:flex-row">
+            <div className="flex flex-col gap-2 text-sm text-gray-500 md:flex-row mb-5">
               <div className="flex items-center gap-2">
                 <img
                   src="https://shop.dalathasfarm.com/public/dalathasfarm/images/delivery.png"
@@ -131,8 +145,7 @@ const ProductDetail = () => {
       {/* Sản phẩm liên quan */}
       {/* <ProductSection title="Sản phẩm liên quan" products={hoaTangProducts} /> */}
       <RelatedProducts
-        category={product.category}
-        products={listData.filter((el) => el.category === product.category)}
+        products={listProducts?.filter((el) => el.category_id === product.category_id)}
       />
     </div>
   ) : (

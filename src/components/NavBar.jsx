@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import useCartStore from "../zustand/useCartStore"
 import useStore from "../zustand/useStore"
 import useUserStore from "../zustand/useUserStore"
+import { getLastName } from "../utils/helper"
 
 import { IoIosLogOut } from "react-icons/io"
 
@@ -79,7 +80,7 @@ const NavBar = () => {
           <div className="group relative">
             <button className="cursor-pointer">
               {
-                me ? <p>Xin chào <span className="font-bold">{me.username.toUpperCase()}</span></p> : <FaUser className="text-2xl" />
+                me ? <p>Xin chào <span className="font-bold">{getLastName(me.username.toUpperCase())}</span></p> : <FaUser className="text-2xl" />
               }
             </button>
             <div className="group-hover:block hidden absolute right-0 dropdown-menu pt-4 z-50">

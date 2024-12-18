@@ -1,10 +1,10 @@
 import { create } from "zustand"
-import { listData } from "../utils/mockData"
+// import { listData } from "../utils/mockData"
 
 const useStore = create((set) => ({
-  listProducts: listData,
+  listProducts: [],
   searchTerm: '',
-  filteredProducts: listData,
+  filteredProducts: [],
   setListProducts: (products) => set({ listProducts: products }),
   setSearchTerm: (term) => set((state) => {
     const filtered = state.listProducts.filter(product => 
